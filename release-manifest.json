@@ -1,0 +1,6 @@
+{
+  "version": "1.9.0",
+  "installer": "PecaStudio-Setup-1.9.0.exe",
+  "sha256": "fe879b93be68d747de3adbce308485c3b483830be183332bc285dcae29607f10",
+  "installer_url": "https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.9.0/PecaStudio-Setup-1.9.0.exe"
+}
