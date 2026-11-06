@@ -1,0 +1,38 @@
+import {uid,newPiece,textLayer} from './model.js';
+function artwork(kind){
+  const c=document.createElement('canvas');c.width=1080;c.height=850;const g=c.getContext('2d');
+  if(kind==='orbit'){
+    const bg=g.createLinearGradient(0,0,1080,850);bg.addColorStop(0,'#1f1848');bg.addColorStop(1,'#8970d3');g.fillStyle=bg;g.fillRect(0,0,1080,850);
+    g.save();g.translate(550,410);g.rotate(-.4);g.strokeStyle='#d1bbff70';g.lineWidth=3;for(let i=0;i<5;i++){g.beginPath();g.ellipse(0,0,420+i*16,140+i*22,0,0,Math.PI*2);g.stroke();}g.restore();
+    const grad=g.createRadialGradient(440,270,15,550,410,270);grad.addColorStop(0,'#eee3ff');grad.addColorStop(.35,'#cab4fd');grad.addColorStop(.78,'#6948b5');grad.addColorStop(1,'#302157');g.fillStyle=grad;g.beginPath();g.arc(550,410,244,0,Math.PI*2);g.fill();g.fillStyle='#eadfff';[[195,180],[845,610],[890,170],[120,520],[750,80]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,3,0,7);g.fill();});
+  }else if(kind==='botanical'){
+    g.fillStyle='#e6e3d1';g.fillRect(0,0,1080,850);g.fillStyle='#cfceb8';g.beginPath();g.arc(810,330,380,0,7);g.fill();
+    g.save();g.translate(535,690);g.strokeStyle='#546642';g.lineWidth=10;g.beginPath();g.moveTo(0,150);g.quadraticCurveTo(-20,-210,50,-590);g.stroke();
+    for(let i=0;i<7;i++){const y=-i*75,side=i%2?1:-1;g.save();g.translate(22,y);g.rotate(side*.8);const leaf=g.createLinearGradient(0,0,side*270,-70);leaf.addColorStop(0,'#40563b');leaf.addColorStop(1,'#8c9f70');g.fillStyle=leaf;g.beginPath();g.moveTo(0,0);g.bezierCurveTo(side*250,70,side*350,-160,side*220,-170);g.bezierCurveTo(side*100,-180,side*20,-60,0,0);g.fill();g.restore();}g.restore();
+  }else {
+    g.fillStyle='#c87b50';g.fillRect(0,0,1080,850);const bg=g.createLinearGradient(0,0,1080,850);bg.addColorStop(0,'#ffffff30');bg.addColorStop(1,'#36130965');g.fillStyle=bg;g.fillRect(0,0,1080,850);
+    g.fillStyle='#3c251e30';g.beginPath();g.ellipse(590,710,360,75,-.1,0,7);g.fill();g.save();g.translate(550,410);g.rotate(-.15);g.fillStyle='#efe1bc';g.fillRect(-190,-240,380,520);g.fillStyle='#ddd0a9';g.fillRect(-190,-240,380,38);g.fillStyle='#354337';g.fillRect(-155,-100,310,225);g.fillStyle='#eadfbd';g.font='bold 62px Georgia';g.textAlign='center';g.fillText('CAFÉ',0,-22);g.font='26px Arial';g.fillText('DAS MONTANHAS',0,35);g.font='20px Arial';g.fillText('ORIGEM • 250 g',0,83);g.fillStyle='#a98a60';g.fillRect(-130,190,260,3);g.restore();
+    g.fillStyle='#4f3028';for(const [x,y,a]of [[180,700,.4],[850,620,-.3],[880,700,.7],[250,600,-.8]]){g.save();g.translate(x,y);g.rotate(a);g.beginPath();g.ellipse(0,0,20,30,0,0,7);g.fill();g.strokeStyle='#ae7750';g.lineWidth=3;g.beginPath();g.moveTo(0,-22);g.quadraticCurveTo(-8,0,0,23);g.stroke();g.restore();}
+  }
+  return c.toDataURL('image/jpeg',.9);
+}
+export function demoState(){
+  const projects=[{id:uid(),name:'Órbita · Conteúdo',color:'#ab8bff',folders:[{id:uid(),name:'Carrosséis'},{id:uid(),name:'Campanha de outubro'}]},{id:uid(),name:'Café das Montanhas',color:'#e9ad7c',folders:[{id:uid(),name:'Lançamento'}]},{id:uid(),name:'Botânica',color:'#a7c29d',folders:[]}];
+  const [orb,cafe,bot]=projects,orbit=artwork('orbit'),coffee=artwork('coffee'),leaves=artwork('botanical');
+  const pieces=[];
+  const t=(text,x,y,size,color='#ffffff',extra={})=>textLayer(text,{x,y,size,color,w:900,...extra});
+  const image=(src,extra={})=>({id:uid(),type:'image',name:'Imagem principal',src,x:0,y:0,w:1080,h:750,zoom:1,offsetX:0,offsetY:0,flip:false,visible:true,...extra});
+  function piece(project,title,bg,layers,format='feed',status='Rascunho'){
+    const p=newPiece(project.id,title,format);p.demo=true;p.status=status;p.slides[0].bg=bg;p.slides[0].layers=layers;p.updatedAt=new Date(Date.now()-pieces.length*86400000).toISOString();pieces.push(p);return p;
+  }
+  const p=piece(orb,'Ideias que saem da órbita','#18102d',[image(orbit,{h:725}),t('ÓRBITA  /  ESTÚDIO CRIATIVO',75,62,22,'#ffffff',{bold:false,letterSpacing:4}),t('Sua próxima\ngrande ideia.',75,795,105,'#efe4ff',{w:930,lineHeight:1.05}),t('Não precisa caber no que já existe.',80,1083,30,'#c4aedc',{bold:false}),t('ARRASTE PARA DESCOBRIR  →',80,1255,20,'#c3a0fa',{letterSpacing:2})]);p.folderId=orb.folders[0].id;
+  for(const [index,title,body]of [[2,'Comece com\numa pergunta.','O que você quer que as pessoas sintam\nao encontrar a sua marca?'],[3,'Escolha uma\núnica mensagem.','Uma boa peça não precisa dizer tudo.\nPrecisa dizer algo que importe.'],[4,'Dê espaço\nà sua ideia.','Texto, imagem e respiro.\nCada elemento tem seu papel.']]){const s=newPiece(orb.id,'').slides[0];s.bg=index%2?'#c6b1ef':'#251440';s.layers=[t('ÓRBITA  /  NOTAS CRIATIVAS',80,80,22,index%2?'#241536':'#c5a7ed',{bold:false,letterSpacing:3}),t(String(index).padStart(2,'0'),80,270,150,index%2?'#73519f':'#a375df',{font:'Georgia',italic:true}),t(title,80,530,100,index%2?'#241536':'#ffffff',{lineHeight:1.05}),t(body,80,925,34,index%2?'#453051':'#cdb8e4',{bold:false,lineHeight:1.4}),t('UMA IDEIA DE CADA VEZ. →',80,1240,20,index%2?'#241536':'#b78fea',{letterSpacing:2})];p.slides.push(s);}
+  piece(cafe,'Um ritual para desacelerar','#f0e3c7',[image(coffee,{y:380,h:760}),t('CAFÉ DAS MONTANHAS',75,72,23,'#3a4734',{letterSpacing:4}),t('O melhor\ndo seu dia.',75,170,100,'#33412e',{font:'Georgia',lineHeight:1.02}),t('Café de origem. Tempo de qualidade.',75,1180,28,'#4d513b',{bold:false}),t('CONHEÇA NOSSA SELEÇÃO   ↗',75,1260,20,'#79523c',{letterSpacing:2})],'feed','Pronto');
+  piece(orb,'Menos ruído. Mais presença.','#c4adee',[t('ÓRBITA  /  MANIFESTO',80,75,23,'#332049',{letterSpacing:3,bold:false}),t('Menos\nruído.\nMais\npresença.',75,275,138,'#29183e',{font:'Georgia',italic:true,lineHeight:1.03,w:930}),t('Conteúdo que merece\num segundo olhar.',80,1050,35,'#4f376b',{bold:false}),t('CRIATIVIDADE COM INTENÇÃO.   ↗',80,1260,20,'#3b2256',{letterSpacing:2})],'feed','Em revisão');
+  piece(bot,'Naturalmente, um novo começo','#e6e3d1',[image(leaves,{y:410,h:690}),t('B O T Â N I C A',75,75,30,'#3d4b35',{font:'Georgia',bold:false}),t('Crescer tem\nseu tempo.',75,183,100,'#35432f',{font:'Georgia',lineHeight:1.05}),t('Cuide de cada pequeno começo.',75,1175,30,'#4c5a42',{bold:false}),t('UM POUCO MAIS DE VERDE.   ↗',75,1265,20,'#4e6144',{letterSpacing:2})],'feed','Em edição');
+  piece(orb,'3 ideias para criar com intenção','#3e245f',[t('CADERNO CRIATIVO   /   01',80,80,22,'#d0b7ed',{letterSpacing:3,bold:false}),t('3',75,250,380,'#bf9be9',{font:'Georgia',italic:true}),t('ideias para\ncriar com\nintenção.',80,735,95,'#fff4ef',{lineHeight:1.05}),t('SALVE PARA O PRÓXIMO PROJETO  ↓',80,1260,20,'#c9a9ec',{letterSpacing:2})],'feed','Rascunho');
+  piece(cafe,'Da origem à sua xícara','#3b4839',[t('CAFÉ DAS MONTANHAS',80,80,24,'#dbc9a8',{letterSpacing:3}),t('Da origem\nà sua\nxícara.',80,390,145,'#f0e3c7',{font:'Georgia',lineHeight:1.05}),t('Histórias que a gente\nsente no primeiro gole.',80,1100,38,'#c3c6ad',{bold:false,lineHeight:1.4}),t('DESCUBRA A NOSSA ORIGEM   ↗',80,1680,23,'#e1c59a',{letterSpacing:2})],'story','Em edição');
+  piece(bot,'Pequenos cuidados, grandes mudanças','#b6c6a1',[t('B O T Â N I C A',80,80,28,'#33442e',{font:'Georgia',bold:false}),t('Pequenos\ncuidados.\nGrandes\nmudanças.',80,310,100,'#2f432a',{font:'Georgia',lineHeight:1.08}),t('Comece pelo que está perto.',80,1190,32,'#3d5134',{bold:false})],'feed','Pronto');
+  piece(orb,'Seu processo também é conteúdo','#efe6db',[t('ÓRBITA / BASTIDORES',75,65,22,'#4b365a',{letterSpacing:3}),t('O processo\ntambém é\nconteúdo.',75,250,115,'#3d2455',{font:'Georgia',lineHeight:1.05}),t('Mostre o caminho, não só a chegada.',80,830,28,'#6a5277',{bold:false}),t('COMPARTILHE UMA IDEIA.  ↗',80,990,20,'#4b365a',{letterSpacing:2})],'quadrado','Rascunho');
+  return {version:1,projects,pieces,demoNotice:true};
+}

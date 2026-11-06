@@ -1,0 +1,9 @@
+{
+  "mode": "commercial",
+  "issuer": "https://integralislabs.com/api/oidc",
+  "client_id": "",
+  "product": "",
+  "updates": {
+    "manifest_url": ""
+  }
+}

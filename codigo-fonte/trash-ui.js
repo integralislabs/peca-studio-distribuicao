@@ -1,0 +1,10 @@
+import {restoreTrash} from './trash.js';
+export function initTrashUI({getState,onApply,download}){
+ const d=document.createElement('dialog');d.id='trash-dialog';d.className='studio-dialog';document.body.append(d);
+ const button=document.createElement('button');button.className='button';button.id='open-trash';button.textContent='Lixeira';document.querySelector('#demo-note').insertAdjacentElement('afterend',button);
+ function render(){d.replaceChildren();const title=document.createElement('h2');title.textContent='Lixeira';d.append(title);const note=document.createElement('p');note.textContent='Remover da lixeira elimina o item do backup atual. Cópias em arquivos e nos últimos 20 backups do acervo podem continuar disponíveis.';d.append(note);const close=document.createElement('button');close.className='button';close.textContent='Fechar';close.onclick=()=>d.close();d.append(close);
+ const items=getState().trash||[];if(!items.length)d.append('Nenhum item excluído.');
+ for(const t of items){const row=document.createElement('div');row.className='dialog-section';const label=document.createElement('p');label.textContent=(t.kind==='project'?t.snapshot.projects[0].name:t.snapshot.pieces[0].title)+' · '+new Date(t.deletedAt).toLocaleString();row.append(label);
+ for(const [text,action] of [['Restaurar',async()=>onApply(restoreTrash(getState(),t.id))],['Baixar backup',()=>download(new Blob([JSON.stringify(t.snapshot,null,2)],{type:'application/json'}),'lixeira-'+t.id+'.json')],['Remover da lixeira',async()=>{if(!window.confirm('Remover da lixeira este item do backup atual? Cópias em arquivos e backups anteriores serão preservadas. Baixe um backup se precisar preservá-lo.'))return;const next=structuredClone(getState());next.trash=next.trash.filter(x=>x.id!==t.id);await onApply(next);} ]]){const b=document.createElement('button');b.className='button';b.textContent=text;b.onclick=async()=>{try{await action();render();}catch(e){window.alert(e.message);}};row.append(b);}d.append(row);}}
+ button.onclick=()=>{render();d.showModal();};return {render};
+}

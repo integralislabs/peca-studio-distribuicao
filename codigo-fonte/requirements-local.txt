@@ -1,0 +1,12 @@
+Pillow==13.0.0
+numpy==2.5.4
+opencv-python-headless==5.0.0.93
+reportlab==5.1.0
+charset-normalizer==3.5.2
+fonttools==4.68.0
+brotli==1.2.1
+svglib==2.4.0
+pypdf==6.21.4
+yt-dlp==2026.10.26
+
+PyJWT[crypto]==2.15.1

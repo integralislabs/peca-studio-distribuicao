@@ -1,0 +1,364 @@
+/*
+ * TOKENS DE DESIGN DA INTEGRALIS LABS — a única declaração de cor, tipografia, espaço, raio,
+ * sombra, movimento, ícone e estado da marca. Fonte: brand/tokens.css (este arquivo).
+ *
+ * Quem consome recebe uma CÓPIA GERADA por brand/scripts/build-tokens.mjs — apps/web/app/tokens.css —
+ * guardada por um tripwire de igualdade byte a byte. Editar a cópia é erro de teste; editar aqui e
+ * não rodar o script também.
+ *
+ * Referência curta: brand/TOKENS.md. Decisão: docs/adr/0004 (seção 8; o desktop saiu no ADR 0017).
+ *
+ * Regras que este arquivo obedece:
+ *   - O bloco 1 guarda os nomes e a ordem do :root histórico, para o diff token a token continuar
+ *     possível. Fundo, linhas, texto e os dois azuis são os do site da empresa (integralis.ia.br,
+ *     estilos globais lidos em 10/10/2026); o que o site não declara é derivado e está marcado.
+ *   - Nomes de família de fonte são GANCHOS (var(--font-sans, …)): o site os preenche pelo
+ *     next/font; o renderer dos produtos, por @font-face local. Este arquivo não declara @font-face
+ *     nem --font-*.
+ *   - Cores de estado (ok/warn/danger) continuam semânticas: estado nunca lê como marca.
+ *   - Dois temas, a mesma marca (ADR 0042): o escuro é o padrão do :root; o claro vale com
+ *     [data-theme="light"] e, sem escolha explícita, quando o sistema pede claro
+ *     (prefers-color-scheme) e a página não fixou [data-theme="dark"]. Quem decide o atributo é
+ *     apps/web/lib/theme.tsx; os dois blocos claros abaixo são idênticos (um teste os compara).
+ */
+
+:root {
+  /* ======================================================================================
+   * 1. PALETA — tema escuro, alinhado ao site da empresa (integralis.ia.br) em 10/10/2026.
+   *    "site" = valor declarado nos estilos globais do site; "derivado" = o site não tem o papel,
+   *    então o tom sai da reta entre #070609 e #20212f (superfícies) ou do mesmo matiz (texto).
+   *    Contraste WCAG medido por script; mudar um valor aqui pede medir de novo.
+   * ====================================================================================== */
+  --bg: #070609;                            /* site */
+  --panel: #0f0f15;                         /* derivado: 1,06:1 sobre --bg, o mesmo degrau de antes */
+  --card: #111118;                          /* derivado: 1,08:1 sobre --bg */
+  --line: #20212f;                          /* site: 1,18:1 sobre --card */
+  --line2: #3e3f47;                         /* site: 1,80:1 sobre --card */
+  --fg: #ffffff;                            /* site: 18,80:1 sobre --card */
+  --mut: #adaeb8;                           /* derivado: 8,52:1 sobre --card (o #707070 do site mede 4,08 sobre --bg e não serve de texto) */
+  --dim: #8e8f9a;                           /* derivado: 5,86:1 sobre --card, 6,30:1 sobre --bg */
+  --pri: #439cb6;
+  --pri-lt: #7fd6f0;
+  --pri-dk: #1c6f8c;
+  --grey: #9aa2a7;
+  --pri-a08: rgba(67, 156, 182, 0.08);
+  --pri-a16: rgba(67, 156, 182, 0.16);
+  --pri-a35: rgba(67, 156, 182, 0.35);
+  --btn: #1c6f8c;
+  --btn-h: #0e5576;
+  --glow: 0 0 60px rgba(67, 156, 182, 0.22);
+  --grid: rgba(255, 255, 255, 0.045);
+
+  /* ---- aliases históricos do app web sobre a paleta ---- */
+  --bg-elev: var(--panel);
+  --panel-2: var(--card);
+  --border: var(--line);
+  --border-accent: var(--pri-a35);
+  --text: var(--fg);
+  --muted: var(--mut);
+  --accent: var(--pri);
+  --accent-soft: var(--pri-lt);
+  --accent-bright: var(--pri-lt);
+  --accent-deep: var(--pri-dk);
+  --accent-2: var(--pri-lt);
+  --brand-grey: var(--grey);
+  --ok: #5ec9a0;
+  --warn: #e0b54a;
+  --danger: #f0675c;
+  --radius: 10px;
+  --radius-sm: 5px;
+  --radius-lg: 14px;
+  --brand-grad: linear-gradient(90deg, var(--pri-dk), var(--pri), var(--pri-lt));
+  /* Escala de profundidade — cartões, menus e sobreposições dividem uma só linguagem de sombra. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 10px 30px -18px rgba(0, 0, 0, 0.75);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow-accent: var(--glow);
+  /* Realce de 1px na borda de cima: o painel "iluminado de cima". */
+  --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  /* Escala de movimento — toda transição escolhe daqui, para as telas se moverem num só andamento.
+     Zerada sob prefers-reduced-motion (abaixo), o que silencia tudo que é construído sobre ela. */
+  --dur-fast: 150ms;                        /* interações frequentes: no máximo 150ms (better-ui) */
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);   /* a curva da better-ui para entradas, saídas e trocas */
+  --press-scale: 0.96;                      /* botão pressionado: sempre 0,96 (better-ui) */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --header-h: 52px;
+
+  /* ======================================================================================
+   * 2. PALETA — complementos medidos no site (valores que hoje estão escritos à mão nas regras).
+   * ====================================================================================== */
+  --ink-on-accent: #ffffff;                 /* texto sobre --btn / --danger-solid */
+  --ink-on-brand: #070609;                  /* texto e marcas sobre --brand-grad (item ativo, selo numerado): 6,4:1 no meio do gradiente */
+  --danger-solid: #c7453b;                  /* fundo de botão destrutivo: branco sobre ele mede 4,84:1 */
+  --line-control: #707070;                  /* borda de campo e controle (o cinza do site): 3,86:1 sobre --panel, 3,80:1 sobre --card */
+  --img-outline: oklch(1 0 0 / 0.1);        /* contorno de imagem no tema escuro (better-ui) */
+  --pri-a12: rgba(67, 156, 182, 0.12);      /* anel de foco dos campos */
+  --pri-a50: rgba(67, 156, 182, 0.5);       /* barra de rolagem sob o cursor */
+  --hi-08: rgba(255, 255, 255, 0.08);       /* realce neutro fraco (linhas, divisores sobre cor) */
+  --hi-16: rgba(255, 255, 255, 0.16);       /* polegar da barra de rolagem */
+  --overlay: rgba(4, 3, 6, 0.72);           /* véu atrás de diálogos */
+  --sel-bg: var(--pri-a35);                 /* seleção de texto e de item */
+
+  /* ======================================================================================
+   * 3. TIPOGRAFIA — famílias por gancho, escala de corpo, pesos, entrelinha, espaçamento.
+   * ====================================================================================== */
+  --type-sans: var(--font-sans, 'Montserrat'), system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --type-display: var(--font-display, 'Public Sans'), var(--font-sans, 'Montserrat'), system-ui, sans-serif;
+  --type-mono: var(--font-mono, 'IBM Plex Mono'), ui-monospace, 'Cascadia Code', Consolas, Menlo, monospace;
+  /* Piso de 12px (better-typography): nada de texto de interface abaixo disso. --text-2xs e
+     --text-xs continuam existindo como nomes, agora no piso, para os consumidores não quebrarem. */
+  --text-2xs: 12px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 13px;
+  --text-base: 14px;
+  --text-body: 16px;                        /* texto corrido longo */
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+  /* Títulos de exibição das páginas públicas (site e documentação), fluidos entre celular e tela
+     larga; o h1 fica um degrau acima do h2 em qualquer largura. */
+  --text-display-sm: clamp(32px, 4.4vw, 56px);
+  --text-display: clamp(40px, 5.6vw, 72px);
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.1;                     /* títulos */
+  --leading-wrap: 1.4;                      /* piso de qualquer texto que quebra em 3+ linhas */
+  --leading-base: 1.5;
+  --leading-loose: 1.65;
+  --tracking-display: -0.02em;              /* títulos (Public Sans) */
+  --tracking-caps: 0.06em;                  /* rótulos em caixa alta */
+  --tracking-wordmark: 0.02em;              /* INTEGRALIS LABS */
+
+  /* ======================================================================================
+   * 4. ESPAÇO — base 4px. Componentes escolhem daqui; valores fora da escala pedem um motivo.
+   * ====================================================================================== */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ======================================================================================
+   * 5. RAIOS — além dos três históricos (--radius 10, --radius-sm 5, --radius-lg 14). Os valores são
+   *    os do site da empresa (integralis.ia.br, medidos em 10/10/2026): 3 px nos elementos pequenos,
+   *    5 px nos botões e controles, 10 px nos cartões e imagens; só o 14 dos diálogos é derivado.
+   * ====================================================================================== */
+  --radius-xs: 3px;                         /* kbd, etiquetas pequenas */
+  --radius-field: 5px;                      /* campos de entrada */
+  --radius-btn: 5px;                        /* botões */
+  --radius-pill: 999px;                     /* chips, contadores */
+
+  /* ======================================================================================
+   * 6. ÍCONES — SVG inline, viewBox 0 0 24 24, traço em currentColor, pontas e juntas redondas.
+   * ====================================================================================== */
+  --icon-stroke: 1.75;
+  --icon-stroke-thin: 1.5;
+  --icon-stroke-bold: 2;
+  --icon-xs: 13px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+
+  /* ======================================================================================
+   * 7. ESTADOS — foco, erro/aviso/sucesso/informação (fundos suaves dos avisos), vazio, carregando.
+   * ====================================================================================== */
+  --focus-color: var(--pri-lt);             /* 11,6:1 sobre --panel: visível sobre toda superfície da marca */
+  --focus-outline: 2px solid var(--focus-color);
+  --focus-offset: 2px;
+  --focus-ring: 0 0 0 3px var(--pri-a12);   /* halo decorativo; nunca o único indicador de foco */
+  --danger-soft: #2a1414;  --danger-line: #5a2222;  --danger-ink: #ff9b94;
+  --warn-soft: #16323f;    --warn-line: #1c6f8c;    --warn-ink: #7fd6f0;
+  --ok-soft: #0f2417;      --ok-line: #1f4d2e;      --ok-ink: #7ee2a0;
+  --info-soft: #12293a;    --info-line: var(--pri-a35); --info-ink: var(--pri-lt);
+  /* Atenção em âmbar: o que pede uma pessoa (pagamento desligado, chave sem cifra, modo sandbox).
+     As --warn-* acima são do matiz da marca e leem como "interativo"; estas não. Medidas:
+     --attention-ink sobre --attention-soft 10,55:1, sobre --card 11,88:1; a linha mede 3,73:1 sobre --card. */
+  --attention-soft: #241d0e; --attention-line: #8a6a1f; --attention-ink: #f0c96a;
+  --disabled-opacity: 0.45;
+  --empty-ink: var(--dim);                  /* texto de estado vazio */
+  --empty-line: var(--line2);               /* borda tracejada de área vazia */
+  --spinner-size: 18px;
+  --spinner-track: var(--line);
+  --spinner-head: var(--pri);
+  --spinner-dur: 0.7s;
+  --skeleton: linear-gradient(90deg, var(--panel) 25%, var(--card) 37%, var(--panel) 63%);
+
+  /* ======================================================================================
+   * 8. CATEGORIAS — cores que distinguem TIPOS (nós do canvas, etiquetas, séries), não estados.
+   *    Afinadas para o fundo escuro da marca; cada produto mapeia as suas famílias para cá.
+   * ====================================================================================== */
+  --cat-violet: #9a8cf5;
+  --cat-blue: #5aa9d6;
+  --cat-cyan: #7fd6f0;
+  --cat-green: #5ec9a0;
+  --cat-lime: #a3cf6b;
+  --cat-amber: #e0b54a;
+  --cat-pink: #d67fb6;
+  --cat-red: #f0675c;
+
+  /* ======================================================================================
+   * 9. SUPERFÍCIES DE CÓDIGO — terminal e editor lêem daqui (temas do xterm e do Monaco).
+   * ====================================================================================== */
+  --code-bg: #0b0a0f;
+  --code-fg: var(--fg);
+  --code-cursor: var(--pri-lt);
+  --code-sel: rgba(67, 156, 182, 0.28);
+  --code-gutter: var(--dim);
+  --code-line-hi: rgba(255, 255, 255, 0.03);
+  --ansi-black: #20212f;  --ansi-red: #f0675c;    --ansi-green: #5ec9a0;  --ansi-yellow: #e0b54a;
+  --ansi-blue: #5aa9d6;   --ansi-magenta: #d67fb6; --ansi-cyan: #7fd6f0;  --ansi-white: #ffffff;
+  --ansi-bright-black: #8e8f9a;
+
+  /* ======================================================================================
+   * 10. CONTROLES DE FORMULÁRIO — a caixa única de campo, seletor e área de texto
+   *     (apps/web/components/ui/form, regras em apps/web/DESIGN.md "Forms"). Geometria do padrão
+   *     TwoCanada adaptada: 44 px de altura (área de toque da Integralis) e raio de 8 px.
+   * ====================================================================================== */
+  --control-h: 44px;                        /* altura de campo, seletor e botão de formulário */
+  --control-h-sm: 32px;                     /* barra de ferramentas (busca, filtro), nunca num formulário */
+  --control-px: 12px;                       /* recuo do texto dentro da caixa */
+  --radius-control: 8px;                    /* campos, seletores e botões de formulário */
+  --control-bg: var(--panel-2);             /* fundo da caixa (escuro: --card) */
+  --control-border: var(--line-control);    /* borda em repouso: 3,8:1 sobre --card */
+  --control-border-hover: var(--dim);       /* borda sob o cursor */
+  --control-ring: color-mix(in srgb, var(--accent) 18%, transparent); /* halo do foco, junto da borda --accent */
+  --control-placeholder: var(--dim);        /* exemplo dentro do campo; nunca o rótulo */
+  --label-ink: var(--text);                 /* rótulo do campo: 14 px, peso 500 */
+  --hint-ink: var(--muted);                 /* dica abaixo do campo: 12 px */
+  --section-ink: var(--muted);              /* título de seção do formulário: 12 px, caixa alta */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; }
+}
+
+/*
+ * TEMA CLARO — derivado da mesma paleta (a marca funciona sobre branco sem mudar de matiz; ver
+ * brand/README.md). Só os tokens que mudam; os demais herdam do :root. Contraste WCAG AA medido:
+ * --fg 17,07:1 e --dim 4,85:1 sobre --bg; --pri 5,67:1 sobre --panel; branco sobre --btn 5,67:1.
+ *
+ * Vale de dois jeitos, com as MESMAS declarações (um teste compara os dois blocos):
+ *   1. [data-theme="light"] — escolha explícita (o seletor de tema grava e aplica o atributo);
+ *   2. sistema claro sem tema fixado — :root:not([data-theme="dark"]) dentro do @media, para quem
+ *      chega sem JavaScript ou numa página que não fixou o atributo.
+ */
+[data-theme="light"] {
+  --bg: #f4f8fb;
+  --panel: #ffffff;
+  --card: #f9fbfd;
+  --line: #d6e0ea;
+  --line2: #c1cfdc;
+  --fg: #0b1622;
+  --mut: #3d5265;
+  --dim: #5c6f82;                           /* 4,85:1 sobre --bg claro (o anterior media 4,20) */
+  --pri: #1c6f8c;
+  --pri-lt: #0e5576;
+  --pri-dk: #439cb6;
+  --grey: #6b757b;
+  --btn: #1c6f8c;
+  --btn-h: #0e5576;
+  --glow: 0 0 60px rgba(67, 156, 182, 0.18);
+  --grid: rgba(5, 9, 15, 0.05);
+  --ok: #1f7a55;
+  --warn: #8a6a12;
+  --danger: #b8362c;
+  --danger-solid: #b8362c;
+  --ink-on-brand: #ffffff;                  /* sobre --brand-grad claro: 5,67:1 no meio do gradiente (o escuro mediria 3,56) */
+  --line-control: #7a8a9c;                  /* 3,53:1 sobre branco, 3,31:1 sobre --bg claro */
+  --img-outline: oklch(0 0 0 / 0.1);
+  --shadow-sm: 0 1px 2px rgba(11, 22, 34, 0.08);
+  --shadow-md: 0 10px 30px -18px rgba(11, 22, 34, 0.25);
+  --shadow-lg: 0 24px 60px -20px rgba(11, 22, 34, 0.22);
+  --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --hi-08: rgba(5, 9, 15, 0.06);
+  --hi-16: rgba(5, 9, 15, 0.14);
+  --overlay: rgba(11, 22, 34, 0.45);
+  --danger-soft: #fdecea;  --danger-line: #f3b9b3;  --danger-ink: #8f2a22;
+  --warn-soft: #e6f2f7;    --warn-line: #a9d3e2;    --warn-ink: #0e5576;
+  --ok-soft: #e8f6ef;      --ok-line: #b5e0cb;      --ok-ink: #1f6a4a;
+  --info-soft: #e9f3f8;    --info-ink: #0e5576;
+  --attention-soft: #fdf4dc; --attention-line: #a37f22; --attention-ink: #6b4f00; /* ink 6,98:1 sobre soft */
+  --code-bg: #eef3f8;
+  --code-sel: rgba(67, 156, 182, 0.22);
+  --code-line-hi: rgba(5, 9, 15, 0.03);
+  --ansi-black: #d6e0ea;   --ansi-white: #0b1622;   --ansi-bright-black: #66798c;
+  --cat-violet: #6553d1;   /* categorias como texto: >= 4,5:1 sobre branco */
+  --cat-blue: #2b74a6;
+  --cat-green: #1f7f5c;
+  --cat-pink: #a8457f;
+  --cat-red: #c0392f;
+  --cat-cyan: #1c8fb3;
+  --cat-lime: #6f9a2f;
+  --cat-amber: #a67c0c;
+  --control-bg: var(--panel);               /* campo branco sobre o cartão claro */
+  --control-ring: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f8fb;
+    --panel: #ffffff;
+    --card: #f9fbfd;
+    --line: #d6e0ea;
+    --line2: #c1cfdc;
+    --fg: #0b1622;
+    --mut: #3d5265;
+    --dim: #5c6f82;                           /* 4,85:1 sobre --bg claro (o anterior media 4,20) */
+    --pri: #1c6f8c;
+    --pri-lt: #0e5576;
+    --pri-dk: #439cb6;
+    --grey: #6b757b;
+    --btn: #1c6f8c;
+    --btn-h: #0e5576;
+    --glow: 0 0 60px rgba(67, 156, 182, 0.18);
+    --grid: rgba(5, 9, 15, 0.05);
+    --ok: #1f7a55;
+    --warn: #8a6a12;
+    --danger: #b8362c;
+    --danger-solid: #b8362c;
+    --ink-on-brand: #ffffff;                  /* sobre --brand-grad claro: 5,67:1 no meio do gradiente (o escuro mediria 3,56) */
+    --line-control: #7a8a9c;                  /* 3,53:1 sobre branco, 3,31:1 sobre --bg claro */
+    --img-outline: oklch(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px rgba(11, 22, 34, 0.08);
+    --shadow-md: 0 10px 30px -18px rgba(11, 22, 34, 0.25);
+    --shadow-lg: 0 24px 60px -20px rgba(11, 22, 34, 0.22);
+    --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --hi-08: rgba(5, 9, 15, 0.06);
+    --hi-16: rgba(5, 9, 15, 0.14);
+    --overlay: rgba(11, 22, 34, 0.45);
+    --danger-soft: #fdecea;  --danger-line: #f3b9b3;  --danger-ink: #8f2a22;
+    --warn-soft: #e6f2f7;    --warn-line: #a9d3e2;    --warn-ink: #0e5576;
+    --ok-soft: #e8f6ef;      --ok-line: #b5e0cb;      --ok-ink: #1f6a4a;
+    --info-soft: #e9f3f8;    --info-ink: #0e5576;
+    --attention-soft: #fdf4dc; --attention-line: #a37f22; --attention-ink: #6b4f00; /* ink 6,98:1 sobre soft */
+    --code-bg: #eef3f8;
+    --code-sel: rgba(67, 156, 182, 0.22);
+    --code-line-hi: rgba(5, 9, 15, 0.03);
+    --ansi-black: #d6e0ea;   --ansi-white: #0b1622;   --ansi-bright-black: #66798c;
+    --cat-violet: #6553d1;   /* categorias como texto: >= 4,5:1 sobre branco */
+    --cat-blue: #2b74a6;
+    --cat-green: #1f7f5c;
+    --cat-pink: #a8457f;
+    --cat-red: #c0392f;
+    --cat-cyan: #1c8fb3;
+    --cat-lime: #6f9a2f;
+    --cat-amber: #a67c0c;
+    --control-bg: var(--panel);               /* campo branco sobre o cartão claro */
+    --control-ring: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+}
+
