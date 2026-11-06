@@ -7,7 +7,7 @@ Estúdio criativo para Windows: organize projetos, crie peças e carrosséis, ed
 ## Começar
 
 1. Assine o Peça Studio na Integralis. A assinatura mensal custa US$ 20; confira o valor final no checkout.
-2. Baixe o arquivo `PecaStudio-Setup-1.9.0.exe` da release e instale no Windows 10/11 de 64 bits com Microsoft Edge WebView2 disponível.
+2. Baixe o arquivo `PecaStudio-Setup-1.9.1.exe` da release e instale no Windows 10/11 de 64 bits com Microsoft Edge WebView2 disponível.
 3. Abra o Peça Studio e clique em **Entrar com Integralis**, usando a conta com acesso ao produto.
 4. Crie seu projeto ou importe suas peças. Os exemplos iniciais são demonstrações.
 

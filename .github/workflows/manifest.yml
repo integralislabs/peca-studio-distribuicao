@@ -1,0 +1,24 @@
+name: Distribution manifest
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate public release metadata
+        shell: python
+        run: |
+          import json, re
+          from pathlib import Path
+          m = json.loads(Path('release-manifest.json').read_text('utf-8'))
+          assert re.fullmatch(r'\d+\.\d+\.\d+', m['version'])
+          assert re.fullmatch(r'[a-f0-9]{64}', m['sha256'])
+          assert m['installer'] == f"PecaStudio-Setup-{m['version']}.exe"
+          assert m['installer_url'] == f"https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v{m['version']}/{m['installer']}"
+          assert m['installer'] in Path('README.md').read_text('utf-8')
+          print('Public manifest and installation guide agree.')
