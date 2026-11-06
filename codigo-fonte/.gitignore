@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+tests/export-test.zip
+evidencias/
+.env
+.env.*
+*.key
+.runtime/
+.local/
+.superpowers/
+workspace-data/
+work/

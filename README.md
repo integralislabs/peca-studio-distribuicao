@@ -30,7 +30,7 @@ Seu acervo permanece no computador. Faça backup em **Configurações e backup**
 
 O instalador contém o aplicativo e ferramentas locais; não contém biblioteca privada nem chaves de IA. A versão atual não tem assinatura digital Authenticode. O manifesto da release informa o SHA-256 para conferência da integridade. As atualizações são verificadas no aplicativo e dependem de confirmação para instalar.
 
-Este repositório distribui somente o instalador, documentos de uso e o manifesto de atualização. A licença comercial do produto não concede acesso ao código-fonte privado. As licenças das dependências acompanham o aplicativo.
+Este repositório distribui o instalador, documentos de uso e o manifesto de atualização, e também contém o [código-fonte revisado da versão 1.9.1](codigo-fonte/), com testes e scripts de build. A pasta informa a origem, as adaptações e como executar o projeto. As licenças das dependências acompanham o aplicativo. A publicação do código não adiciona uma nova licença de reutilização.
 
 ## Suporte
 

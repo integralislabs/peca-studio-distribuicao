@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><pre id="result">running</pre><script type="module">
+import {importPackage} from '../packages.js';
+try {
+ const html=`<style>.frame{width:600px;height:400px;display:flex;gap:20px;background:linear-gradient(red,blue)}h1{font:40px Arial;margin:10px;width:200px} .box{width:50px;height:50px;background:lime;transform:rotate(12deg)}</style><section data-export-frame class="frame"><h1 data-editable>Editable</h1><div class="box"></div></section><script>parent.PWNED=true;<\/script><img src="https://bad.invalid/track" onerror="parent.PWNED=true">`;
+ const {piece,warnings}=await importPackage(new Map([['index.html',new File([html],'index.html')]]),'test');
+ const s=piece.slides[0];if(s.width!==600||s.layers.find(l=>l.type==='text')?.text!=='Editable'||!s.layers.some(l=>l.type==='image')||window.PWNED)throw Error('geometry/editability/decoration/isolation');
+ const im=new Image();im.src=s.layers.find(l=>l.type==='image').src;await im.decode();const c=document.createElement('canvas');c.width=600;c.height=400;const ctx=c.getContext('2d');ctx.drawImage(im,0,0);const top=ctx.getImageData(2,2,1,1).data,bottom=ctx.getImageData(2,398,1,1).data;if(top[0]<200||bottom[2]<200)throw Error('decoration gradient pixels missing');if(document.querySelector('iframe'))throw Error('sandbox leaked');
+ const mixedHTML='<section data-export-frame style="width:600px;height:400px;font:30px Arial;color:black">Root text<p>Hello <b>world</b>!</p><p>Hello<br>world</p></section>';
+ const mixed=(await importPackage(new Map([['index.html',new File([mixedHTML],'index.html')]]),'test')).piece.slides[0].layers.filter(l=>l.type==='text');
+ const combined=mixed.map(l=>l.text).join('|');if(!combined.includes('Root text')||mixed.filter(l=>l.text==='Hello').length!==2||mixed.filter(l=>l.text==='world').length!==2||!mixed.some(l=>l.text==='!')||!mixed.some(l=>l.text==='world'&&l.bold))throw Error('mixed/root text lost or duplicated: '+combined);
+ const lines=mixed.filter(l=>l.text==='Hello'||l.text==='world');if(!(lines[3].y>lines[2].y))throw Error('BR line geometry lost');
+ document.querySelector('#result').textContent=JSON.stringify({ok:true,layers:s.layers.length,warnings});
+}catch(e){document.querySelector('#result').textContent='FAIL '+e.stack;}
+</script>

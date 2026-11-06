@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {containsLayer} from '../geometry.js';
+import {newPiece,shapeLayer} from '../model.js';import {resizePiece} from '../resize.js';
+test('resize scales shape height border and preserves valid schema',()=>{const p=newPiece('p','Arte');p.slides[0].layers=[shapeLayer({w:100,h:200,strokeWidth:4})];const r=resizePiece(p,2160,2700);assert.equal(r.slides[0].layers[0].h,400);assert.equal(r.slides[0].layers[0].strokeWidth,8);assert.equal(p.slides[0].layers[0].h,200);});
+test('rotated tall layer hits its actual horizontal bounds',()=>{const l={x:100,y:100,w:20,rotation:90};assert.equal(containsLayer(l,100,{x:65,y:150}),true);assert.equal(containsLayer(l,100,{x:110,y:105}),false);assert.equal(containsLayer(l,100,{x:110,y:150}),true);});

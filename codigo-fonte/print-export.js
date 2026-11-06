@@ -1,0 +1,44 @@
+import {verifyImageQA} from './image-conversion-ui.js';
+import {htmlExport} from './html-document-ui.js';
+import {drawSlide,pngBlob} from './render.js';
+import {resizePiece} from './resize.js';
+
+export async function jpegBlob(slide,quality=.92){
+ if(!Number.isFinite(quality)||quality<.1||quality>1)throw Error('Qualidade JPEG inválida.');
+ const canvas=document.createElement('canvas');await drawSlide(canvas,slide);
+ return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Falha ao exportar JPEG.')),'image/jpeg',quality));
+}
+export function needsRasterPages(piece){return (piece.fonts?.length||0)>0;}
+export async function pdfBlob(piece,options={}){
+ if(piece.imageConversion&&!await verifyImageQA(piece))throw Error('Conclua a revisão da conversão antes de exportar.');
+ const body={piece,options};
+ if(needsRasterPages(piece)){body.rasterPages=[];for(const s of piece.slides){const canvas=document.createElement('canvas');await drawSlide(canvas,s);body.rasterPages.push(canvas.toDataURL('image/png'));}}
+ const response=await fetch('/api/local/export/pdf',{method:'POST',headers:{'Content-Type':'application/json','X-Peca-Request':'1'},body:JSON.stringify(body)}),data=await response.json();
+ if(!response.ok)throw Error(data.error||'Não foi possível exportar PDF.');
+ const bytes=Uint8Array.from(atob(data.base64),c=>c.charCodeAt(0));return {blob:new Blob([bytes],{type:'application/pdf'}),warnings:data.warnings,vectorText:data.vectorText};
+}
+export async function createExportBlob(piece,format,options={}){
+ if(piece.imageConversion&&!await verifyImageQA(piece))throw Error('Conclua a revisão da conversão antes de exportar.');
+ const index=options.slideIndex??0;
+ if(!Number.isInteger(index)||!piece.slides[index])throw Error('Slide para exportação inexistente.');
+ if(piece.htmlDocument&&format!=='pdf')return htmlExport(piece,format,index);
+ if(format==='pdf')return pdfBlob(piece,options);
+ if(format==='png')return {blob:await pngBlob(piece.slides[index]),warnings:[]};
+ if(format==='jpeg')return {blob:await jpegBlob(piece.slides[index],options.quality??.92),warnings:[]};
+ throw Error('Formato de exportação não suportado.');
+}
+export function initPrintUI({getPiece,getSlideIndex,onResize,download}){
+ const $=s=>document.querySelector(s);let busy=false;
+ $('#export-html').insertAdjacentHTML('beforebegin','<button id="export-jpeg" class="export-option"><span class="file-icon">JPG</span><span><strong>Slide atual em JPEG</strong><small>Imagem leve em alta qualidade.</small></span><span>↓</span></button><button id="export-pdf" class="export-option"><span class="file-icon">PDF</span><span><strong>PDF para impressão</strong><small>Tamanho físico, papéis, sangria e texto vetorial quando disponível.</small></span><span>→</span></button>');
+ $('.editor-heading').insertAdjacentHTML('beforeend','<button id="resize-piece" class="button">Redimensionar</button>');
+ const d=document.createElement('dialog');d.id='print-dialog';d.className='studio-dialog';d.setAttribute('aria-labelledby','print-title');d.innerHTML=`<div class="dialog-heading"><h2 id="print-title">PDF para impressão</h2><button data-print-close class="icon-btn" aria-label="Fechar impressão">×</button></div><p>Um slide por página. Texto vetorial com fonte incorporada quando suportada. Imagens e decorações mantêm sua resolução original. Escolha RGB ou CMYK e, para a gráfica, carregue o perfil ICC indicado por ela.</p><form id="print-form"><div class="field-grid"><label>Papel<select name="paper"><option value="art">Tamanho da arte</option><option value="a4">A4</option><option value="a3">A3</option><option value="a5">A5</option><option value="letter">Letter</option><option value="custom">Personalizado</option></select></label><label>Cor<select name="colorSpace"><option value="rgb">RGB</option><option value="cmyk">CMYK</option></select></label><label>Perfil ICC CMYK (opcional)<input name="icc" type="file" accept=".icc,.icm"></label><label>DPI<input name="dpi" type="number" value="300" min="72" max="1200" required></label><label>Largura do papel (mm)<input name="paperWidthMm" type="number" value="210" min="20" max="2000" step=".1"></label><label>Altura do papel (mm)<input name="paperHeightMm" type="number" value="297" min="20" max="2000" step=".1"></label><label>Sangria (mm)<input name="bleedMm" type="number" value="0" min="0" max="20" step=".1"></label></div><label><input name="cropMarks" type="checkbox"> Marcas de corte (tamanho da arte)</label><p class="help">A sangria estende a cor do fundo. Fotos ou elementos até a borda precisam exceder o corte na composição e devem ser conferidos na prévia final.</p><button class="button primary" type="submit">Baixar PDF</button></form><p id="print-status" role="status"></p>`;document.body.append(d);
+ const resize=document.createElement('dialog');resize.id='resize-dialog';resize.className='studio-dialog';resize.setAttribute('aria-labelledby','resize-title');resize.innerHTML=`<div class="dialog-heading"><h2 id="resize-title">Adaptar formato</h2><button data-resize-close class="icon-btn" aria-label="Fechar redimensionamento">×</button></div><p>Escala e centraliza a composição. Revise enquadramento e leitura depois de adaptar; uma alteração pode ser desfeita.</p><form id="resize-form"><label>Formato<select name="preset"><option value="1080,1350">Feed 1080 × 1350</option><option value="1080,1920">Story 1080 × 1920</option><option value="1080,1080">Quadrado 1080 × 1080</option><option value="1920,1080">Banner 1920 × 1080</option><option value="custom">Personalizado</option></select></label><div class="field-grid"><label>Largura<input name="width" type="number" min="100" max="4096" value="1080" required></label><label>Altura<input name="height" type="number" min="100" max="4096" value="1350" required></label></div><label>Como adaptar<select name="mode"><option value="contain">Encaixar e centralizar</option><option value="cover">Preencher e recortar bordas</option><option value="scale">Escalar posições por eixo</option></select></label><label><input name="onlyCurrent" type="checkbox"> Somente o slide atual</label><button class="button primary">Aplicar formato</button></form><p id="resize-status" role="status"></p>`;document.body.append(resize);
+ d.querySelector('[data-print-close]').onclick=()=>{if(!busy)d.close();};resize.querySelector('[data-resize-close]').onclick=()=>resize.close();
+ $('#export-jpeg').onclick=async()=>{if(busy)return;busy=true;$('#export-progress').textContent='Preparando JPEG…';try{const p=getPiece();download((await createExportBlob(p,'jpeg',{slideIndex:getSlideIndex()})).blob,'peca-'+p.id+'.jpg');$('#export-progress').textContent='JPEG preparado.';}catch(e){$('#export-progress').textContent=e.message;}finally{busy=false;}};
+ $('#export-pdf').onclick=()=>{$('#print-status').textContent='';d.showModal();};
+ $('#print-form').elements.paper.onchange=e=>{const f=$('#print-form');for(const k of ['paperWidthMm','paperHeightMm'])f.elements[k].disabled=e.target.value!=='custom';f.elements.cropMarks.disabled=e.target.value!=='art';if(e.target.value!=='art')f.elements.cropMarks.checked=false;};$('#print-form').elements.paper.dispatchEvent(new Event('change'));
+ $('#print-form').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;const form=e.target;form.querySelector('button[type=submit]').disabled=true;$('#print-status').textContent='Preparando páginas…';try{const p=getPiece(),options={paper:form.elements.paper.value,dpi:+form.elements.dpi.value,bleedMm:+form.elements.bleedMm.value,paperWidthMm:+form.elements.paperWidthMm.value,paperHeightMm:+form.elements.paperHeightMm.value,cropMarks:form.elements.cropMarks.checked,colorSpace:form.elements.colorSpace.value};const icc=form.elements.icc.files[0];if(icc){if(icc.size>5_000_000)throw Error("Perfil ICC limitado a 5 MB.");const bytes=new Uint8Array(await icc.arrayBuffer());options.iccBase64=Array.from(bytes,b=>String.fromCharCode(b)).join("");options.iccBase64=btoa(options.iccBase64);}const result=await pdfBlob(p,options);download(result.blob,'peca-'+p.id+'.pdf');$('#print-status').textContent=['PDF preparado.',...result.warnings].join(' ');}catch(e){$('#print-status').textContent=e.message;}finally{busy=false;form.querySelector('button[type=submit]').disabled=false;}};
+ $('#resize-piece').onclick=()=>{$('#resize-status').textContent='';resize.showModal();};
+ $('#resize-form').elements.preset.onchange=e=>{if(e.target.value==='custom')return;const [w,h]=e.target.value.split(',');$('#resize-form').elements.width.value=w;$('#resize-form').elements.height.value=h;};
+ $('#resize-form').onsubmit=e=>{e.preventDefault();try{const f=e.target,p=resizePiece(getPiece(),+f.elements.width.value,+f.elements.height.value,{mode:f.elements.mode.value,slideIndex:f.elements.onlyCurrent.checked?getSlideIndex():null});onResize(p);resize.close();}catch(e){$('#resize-status').textContent=e.message;}};
+}

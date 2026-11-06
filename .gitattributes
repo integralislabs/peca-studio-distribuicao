@@ -1,0 +1,2 @@
+# Preserve the snapshot bytes verified by codigo-fonte/SOURCE-MANIFEST.json.
+codigo-fonte/** -text

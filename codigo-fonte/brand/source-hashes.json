@@ -1,0 +1,47 @@
+[
+  {
+    "path": "brand/integralis-icon.svg",
+    "sha256": "83004cf614386173c38c45790075990ca2197c63876e53991b35abc73dfbcccc",
+    "bytes": 2207
+  },
+  {
+    "path": "brand/integralis-logo.svg",
+    "sha256": "e0e4ad8f4bbf4b08c1125daf1b49609a04ff16d101b16e6b9ef7746c91ac8325",
+    "bytes": 2406
+  },
+  {
+    "path": "brand/tokens.css",
+    "sha256": "9bcfd5480c54ed8a9568d15e677bd3b3e8d1eb5b57b0e46812070ad24c50a596",
+    "bytes": 19276
+  },
+  {
+    "path": "brand/fonts/fonts.css",
+    "sha256": "92b27c361e823f7857d2b0ce8e91f995fb674923edce45c495ea536e701c0cc2",
+    "bytes": 1754
+  },
+  {
+    "path": "brand/fonts/montserrat-400-700-latin-ext.woff2",
+    "sha256": "54d9a78b7ff60b689ad9f3017ffac8547b5d871afec733f6c1c3ae36577ee504",
+    "bytes": 70688
+  },
+  {
+    "path": "brand/fonts/montserrat-400-700-latin.woff2",
+    "sha256": "06b16db7a969135d48d38c49183be7fb88d4452e2a3011957c7851941f4e4879",
+    "bytes": 37956
+  },
+  {
+    "path": "brand/fonts/OFL.txt",
+    "sha256": "f229974c631ecbcdefde3a5e9f9232dbe6549c83d60f6ea3197a55484efe5a1f",
+    "bytes": 4545
+  },
+  {
+    "path": "brand/fonts/public-sans-500-700-latin-ext.woff2",
+    "sha256": "3a00a32f0242b723dcea79935747d6d27dd93675d03ef23f470dfe274e79586a",
+    "bytes": 18472
+  },
+  {
+    "path": "brand/fonts/public-sans-500-700-latin.woff2",
+    "sha256": "5ed4d31c988e73b258894244f209069ebe77dc7e564861954b21198b6de90d68",
+    "bytes": 26832
+  }
+]

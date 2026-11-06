@@ -1,0 +1,5 @@
+<!doctype html><button id="fonts-button">Fontes</button><dialog id="fonts-dialog"><div id="font-list"></div></dialog><pre id="result">running</pre><script type="module">
+import {initFontsUI} from '../font-ui.js';
+const state={fonts:[]};initFontsUI({getState:()=>state,onChange:fonts=>state.fonts=fonts});document.querySelector('#fonts-button').click();
+const ok=document.querySelector('#fonts-dialog').open&&document.querySelectorAll('#font-list>div').length===6&&document.querySelector('[role=status]').textContent.includes('Nenhuma');document.querySelector('#result').textContent=ok?'PASS':'FAIL';
+</script>
