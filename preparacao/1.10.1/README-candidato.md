@@ -34,7 +34,7 @@ Seu acervo permanece no computador. Faça backup em **Configurações e backup**
 
 O instalador contém o aplicativo e ferramentas locais; não contém biblioteca privada nem chaves de IA. Antes da publicação da versão 1.10.1, a TI deve confirmar a assinatura digital do aplicativo, Setup e desinstalador. O manifesto final deve informar o SHA-256 dos bytes assinados para conferência da integridade. As atualizações são verificadas no aplicativo e dependem de confirmação para instalar.
 
-Este repositório distribui o instalador, documentos de uso e o manifesto de atualização, e também contém o [código-fonte revisado da versão 1.9.1](codigo-fonte/), com testes e scripts de build. A pasta informa a origem, as adaptações e como executar o projeto. As licenças das dependências acompanham o aplicativo. A publicação do código não adiciona uma nova licença de reutilização.
+Este repositório distribui o instalador, documentos de uso e o manifesto de atualização, e também contém o [código-fonte revisado da versão 1.9.1](https://github.com/integralislabs/peca-studio-distribuicao/tree/main/codigo-fonte), com testes e scripts de build. A pasta informa a origem, as adaptações e como executar o projeto. As licenças das dependências acompanham o aplicativo. A publicação do código não adiciona uma nova licença de reutilização.
 
 ## Suporte
 

@@ -23,7 +23,7 @@ Os componentes mantêm suas próprias licenças. Os três kits e o índice devem
 ## Ativação do canal, somente depois da aprovação
 1. Publicar a release versionada v1.10.1 com todos os arquivos finais; baixar anonimamente instalador e três kits e conferir hashes com o índice.
 2. Preparar release-manifest.json com version 1.10.1, installer PecaStudio-Setup-1.10.1.exe, sha256 calculado do arquivo final assinado e installer_url versionado. Nunca usar valor fictício ou o hash de outro candidato.
-3. Copiar o conteúdo revisado de README-candidato.md para a raiz, removendo o aviso de preparação e confirmando que nenhum link aponta a arquivo ausente. Atualizar manifesto e README juntos, passando o CI.
+3. Copiar o conteúdo revisado de README-candidato.md para a raiz, removendo o aviso inicial e os trechos internos de preparação (como “Links candidatos” e “Antes da publicação…”), ajustando o texto à versão final conferida e confirmando que nenhum link aponta a arquivo ausente. Atualizar manifesto e README juntos, passando o CI.
 4. No catálogo Integralis, conferir a página /marketplace/peca-studio e o botão de download da versão certa. Preservar US$ 20/mês, produto peca_studio, slug, OAuth e campos existentes.
 5. Conferir o manifesto servido, a versão baixada e o acesso autorizado; registrar URL, hash, data e responsável.
 
