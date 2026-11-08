@@ -1,13 +1,15 @@
-# Peça Studio · Integralis Labs
+# Peça Studio 1.10.1 · Integralis Labs
 
 Estúdio criativo para Windows: organize projetos, crie peças e carrosséis, edite HTML/CSS e transforme imagens em camadas editáveis.
 
-**[Conhecer e assinar na Integralis](https://integralislabs.com/marketplace/peca-studio)** · **[Baixar instalador para Windows](https://github.com/integralislabs/peca-studio-distribuicao/releases/latest)**
+**[Conhecer e assinar na Integralis](https://integralislabs.com/marketplace/peca-studio)** · **[Baixar instalador para Windows](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/PecaStudio-Setup-1.10.1.exe)**
+
+**Disponibilidade:** instalador 1.10.1 sem assinatura digital Authenticode. O aceite humano Windows 10/11 e a cobrança Stripe LIVE permanecem pendentes com a TI. A publicação do download não comprova essas etapas.
 
 ## Começar
 
-1. Assine o Peça Studio na Integralis. A assinatura mensal custa US$ 20; confira o valor final no checkout.
-2. Baixe o arquivo `PecaStudio-Setup-1.9.1.exe` da release e instale no Windows 10/11 de 64 bits com Microsoft Edge WebView2 disponível.
+1. Consulte o Peça Studio na Integralis. O preço cadastrado é US$ 20/mês; a ativação da cobrança real Stripe LIVE permanece com a TI. Use uma conta com acesso autorizado ao produto.
+2. Baixe o arquivo `PecaStudio-Setup-1.10.1.exe` da release e instale no Windows 10/11 de 64 bits com Microsoft Edge WebView2 disponível.
 3. Abra o Peça Studio e clique em **Entrar com Integralis**, usando a conta com acesso ao produto.
 4. Crie seu projeto ou importe suas peças. Os exemplos iniciais são demonstrações.
 
@@ -15,6 +17,8 @@ Estúdio criativo para Windows: organize projetos, crie peças e carrosséis, ed
 
 ## O que inclui
 
+- Planejamento de carrossel, briefing e revisão local de conteúdo e marca.
+- Alertas editoriais são triagens; fatos, fotos e exceções de marca exigem conferência humana.
 - Biblioteca com grade, lista e Kanban; projetos, pastas, busca, modelos, kit de marca e lixeira.
 - Editor de texto, formas, imagens, camadas e slides; importação e edição de HTML/CSS preservado.
 - Conversão de imagens com OCR local e revisão da qualidade e das fontes. A separação em camadas pode precisar de ajustes manuais.
@@ -28,10 +32,21 @@ Os recursos de IA exigem configuração da chave do provedor pelo próprio usuá
 
 Seu acervo permanece no computador. Faça backup em **Configurações e backup**. Não envie chaves, credenciais ou acervos privados em chamados públicos. Recursos de IA e publicação enviam o conteúdo necessário ao provedor configurado quando você os utiliza.
 
-O instalador contém o aplicativo e ferramentas locais; não contém biblioteca privada nem chaves de IA. A versão atual não tem assinatura digital Authenticode. O manifesto da release informa o SHA-256 para conferência da integridade. As atualizações são verificadas no aplicativo e dependem de confirmação para instalar.
+O instalador contém o aplicativo e ferramentas locais; não contém biblioteca privada nem chaves de IA. Este pacote não possui assinatura digital Authenticode; SHA-256 confere integridade, não identidade do editor. Assinatura do aplicativo, Setup e desinstalador permanece com a TI. Uma futura entrega assinada terá novos hashes e nova validação. As atualizações são verificadas no aplicativo e dependem de confirmação para instalar.
 
-Este repositório distribui o instalador, documentos de uso e o manifesto de atualização, e também contém o [código-fonte revisado da versão 1.9.1](codigo-fonte/), com testes e scripts de build. A pasta informa a origem, as adaptações e como executar o projeto. As licenças das dependências acompanham o aplicativo. A publicação do código não adiciona uma nova licença de reutilização.
+Este repositório distribui o instalador, documentos de uso e o manifesto de atualização, e também contém o [código-fonte revisado da versão 1.9.1](https://github.com/integralislabs/peca-studio-distribuicao/tree/main/codigo-fonte), com testes e scripts de build. A pasta informa a origem, as adaptações e como executar o projeto. As licenças das dependências acompanham o aplicativo. A publicação do código não adiciona uma nova licença de reutilização.
 
 ## Suporte
 
 [Abrir um chamado sobre o Peça Studio](https://github.com/integralislabs/peca-studio-distribuicao/issues/new). Descreva a versão, o que tentou fazer e a mensagem exibida, sem incluir dados privados. Assinaturas, conta e pagamentos são administrados pela [Integralis Labs](https://integralislabs.com).
+
+## Fontes correspondentes e licenças
+
+Os arquivos abaixo acompanham o instalador 1.10.1 sem assinatura; seus hashes constam do índice da release. Cada componente mantém seus direitos e avisos. As receitas próprias de reprodução têm MIT restrita a esses scripts, sem alterar a licença do aplicativo.
+
+- [PecaStudio-1.10.1-FONTES-PYTHON-E-AVISOS.zip](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/PecaStudio-1.10.1-FONTES-PYTHON-E-AVISOS.zip)
+- [PecaStudio-1.10.1-FONTES-OCR.zip](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/PecaStudio-1.10.1-FONTES-OCR.zip)
+- [PecaStudio-1.10.1-FONTES-VIDEO.zip](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/PecaStudio-1.10.1-FONTES-VIDEO.zip)
+- [Índice de fontes e hashes](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/SOURCE-KIT-INDEX.json)
+
+A biblioteca svglib LGPL pode ser substituída por fonte compatível em `_internal/svglib/`; instruções e textos completos acompanham o pacote. A TI deve regenerar o vínculo dos kits depois de assinar o Setup.
