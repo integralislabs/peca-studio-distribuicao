@@ -4,6 +4,8 @@ Estúdio criativo para Windows: organize projetos, crie peças e carrosséis, ed
 
 **[Conhecer e assinar na Integralis](https://integralislabs.com/marketplace/peca-studio)** · **[Baixar instalador para Windows](https://github.com/integralislabs/peca-studio-distribuicao/releases/download/v1.10.1/PecaStudio-Setup-1.10.1.exe)**
 
+A apresentação do produto também está numa página própria, [`docs/index.html`](docs/index.html): o que o Peça Studio faz, para quem é, como começar e perguntas frequentes. Ela é autônoma (sem fontes, scripts ou rastreamento de terceiros) e pode ser publicada pelo GitHub Pages a partir da pasta `docs/`.
+
 **Disponibilidade:** instalador 1.10.1 sem assinatura digital Authenticode. O aceite humano Windows 10/11 e a cobrança Stripe LIVE permanecem pendentes com a TI. A publicação do download não comprova essas etapas.
 
 ## Começar
